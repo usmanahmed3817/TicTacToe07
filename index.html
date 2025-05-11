@@ -1,395 +1,374 @@
-‎
-‎<!DOCTYPE html>
-‎<html lang="en">
-‎<head>
-‎  <meta charset="UTF-8" />
-‎  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-‎  <title>Tic Tac Toe - Color Edition</title>
-‎  <style>
-‎    body {
-‎      font-family: 'Segoe UI', sans-serif;
-‎      text-align: center;
-‎      background: #f0f4f8;
-‎      padding-bottom: 60px;
-‎    }
-‎
-‎    h1 {
-‎      margin-top: 20px;
-‎      color: #1d4ed8;
-‎    }
-‎
-‎    #modeSelect, #gameBoard {
-‎      margin-top: 20px;
-‎    }
-‎
-‎    #modeSelect button {
-‎      margin: 0 10px;
-‎      padding: 10px 20px;
-‎      font-size: 16px;
-‎      cursor: pointer;
-‎      border: none;
-‎      border-radius: 6px;
-‎      background: #f97316;
-‎      color: white;
-‎      transition: background 0.3s;
-‎    }
-‎
-‎    #modeSelect button:hover {
-‎      background: #ea580c;
-‎    }
-‎
-‎    #board {
-‎      display: grid;
-‎      grid-template-columns: repeat(3, 100px);
-‎      grid-template-rows: repeat(3, 100px);
-‎      gap: 8px;
-‎      justify-content: center;
-‎      margin: 20px auto;
-‎      padding: 10px;
-‎      background: linear-gradient(45deg, #ff6b6b, #ffb3b3);
-‎      border-radius: 10px;
-‎      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-‎    }
-‎
-‎    .cell {
-‎      background: #fff;
-‎      border: 2px solid #ffadad;
-‎      font-size: 48px;
-‎      font-weight: bold;
-‎      display: flex;
-‎      align-items: center;
-‎      justify-content: center;
-‎      cursor: pointer;
-‎      transition: background 0.2s ease;
-‎      border-radius: 8px;
-‎      opacity: 0;
-‎      transform: scale(0.5);
-‎      animation: popIn 0.3s forwards;
-‎    }
-‎
-‎    @keyframes popIn {
-‎      0% { opacity: 0; transform: scale(0.5); }
-‎      100% { opacity: 1; transform: scale(1); }
-‎    }
-‎
-‎    .cell:hover {
-‎      background: #ffb3b3;
-‎    }
-‎
-‎    .cell.taken {
-‎      cursor: not-allowed;
-‎    }
-‎
-‎    .cell.x {
-‎      color: #3b82f6;
-‎    }
-‎
-‎    .cell.o {
-‎      color: #ef4444;
-‎    }
-‎
-‎    #popup {
-‎      position: fixed;
-‎      top: 0;
-‎      left: 0;
-‎      width: 100%;
-‎      height: 100%;
-‎      background: rgba(0,0,0,0.5);
-‎      display: none;
-‎      justify-content: center;
-‎      align-items: center;
-‎      z-index: 1001;
-‎    }
-‎
-‎    #popupContent {
-‎      background: white;
-‎      padding: 30px;
-‎      border-radius: 10px;
-‎      text-align: center;
-‎      box-shadow: 0 0 15px rgba(0,0,0,0.3);
-‎    }
-‎
-‎    #popupContent h2 {
-‎      margin-bottom: 20px;
-‎    }
-‎
-‎    .win-msg {
-‎      color: #22c55e;
-‎    }
-‎
-‎    .draw-msg {
-‎      color: #f59e0b;
-‎    }
-‎
-‎    #popup button {
-‎      padding: 10px 20px;
-‎      font-size: 16px;
-‎      background: #6366f1;
-‎      color: white;
-‎      border: none;
-‎      border-radius: 5px;
-‎      cursor: pointer;
-‎    }
-‎
-‎    #popup button:hover {
-‎      background: #4f46e5;
-‎    }
-‎
-‎    #banner-ad-container {
-‎      margin: 20px auto;
-‎      text-align: center;
-‎      width: 100%;
-‎      max-width: 728px;
-‎      min-height: 90px;
-‎      overflow: hidden;
-‎    }
-‎
-‎    .ad-label {
-‎      font-size: 12px;
-‎      color: #666;
-‎      margin-bottom: 5px;
-‎      text-transform: uppercase;
-‎    }
-‎
-‎    @media (max-width: 768px) {
-‎      #banner-ad-container {
-‎        max-width: 320px;
-‎        min-height: 50px;
-‎      }
-‎    }
-‎
-‎    #musicControl {
-‎      position: fixed;
-‎      bottom: 80px;
-‎      right: 20px;
-‎      background: rgba(255, 255, 255, 0.8);
-‎      padding: 10px;
-‎      border-radius: 50%;
-‎      cursor: pointer;
-‎      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-‎      z-index: 100;
-‎    }
-‎
-‎    #musicControl i {
-‎      font-size: 24px;
-‎      color: #3b82f6;
-‎    }
-‎
-‎    /* ✅ Bottom Sticky Ad */
-‎    #bottomAd {
-‎      position: fixed;
-‎      bottom: 0;
-‎      left: 0;
-‎      width: 100%;
-‎      background: #ffffff;
-‎      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-‎      text-align: center;
-‎      z-index: 9999;
-‎      padding: 4px 0;
-‎    }
-‎
-‎    #bottomAd .ad-label {
-‎      font-size: 10px;
-‎      color: #999;
-‎      margin-bottom: 2px;
-‎      text-transform: uppercase;
-‎    }
-‎  </style>
-‎
-‎  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-‎  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-9474678817392803" crossorigin="anonymous"></script>
-‎</head>
-‎<body>
-‎
-‎  <h1>Tic Tac Toe</h1>
-‎
-‎  <div id="modeSelect">
-‎    <button onclick="startGame('1p')">One Player</button>
-‎    <button onclick="startGame('2p')">Two Player</button>
-‎  </div>
-‎
-‎  <div id="gameBoard" style="display:none;">
-‎    <div id="board"></div>
-‎
-‎    <div id="banner-ad-container">
-‎      <div class="ad-label">Advertisement</div>
-‎      <ins class="adsbygoogle"
-‎           style="display:block"
-‎           data-ad-client="ca-app-pub-9474678817392803"
-‎           data-ad-slot="3267246419"
-‎           data-ad-format="auto"
-‎           data-full-width-responsive="true"></ins>
-‎    </div>
-‎  </div>
-‎
-‎  <div id="musicControl" onclick="toggleMusic()">
-‎    <i class="fas fa-music"></i>
-‎  </div>
-‎
-‎  <div id="popup">
-‎    <div id="popupContent">
-‎      <h2 id="popupMessage"></h2>
-‎      <button onclick="restartGame()">Restart</button>
-‎    </div>
-‎  </div>
-‎
-‎  <audio id="bgMusic" loop>
-‎    <source src="https://freetouse.com/music/alegend/majestic" type="audio/mpeg">
-‎    Your browser does not support the audio element.
-‎  </audio>
-‎
-‎  <!-- ✅ Bottom Sticky Ad HTML -->
-‎  <div id="bottomAd">
-‎    <div class="ad-label">Advertisement</div>
-‎    <ins class="adsbygoogle"
-‎         style="display:block"
-‎         data-ad-client="ca-app-pub-9474678817392803"
-‎         data-ad-slot="4887946"
-‎         data-ad-format="auto"
-‎         data-full-width-responsive="true"></ins>
-‎  </div>
-‎
-‎  <script>
-‎    const boardElement = document.getElementById("board");
-‎    const popup = document.getElementById("popup");
-‎    const popupMessage = document.getElementById("popupMessage");
-‎    const gameBoard = document.getElementById("gameBoard");
-‎    const bgMusic = document.getElementById("bgMusic");
-‎    const musicControl = document.getElementById("musicControl");
-‎
-‎    let board = ["", "", "", "", "", "", "", "", ""];
-‎    let currentPlayer = "X";
-‎    let mode = "2p";
-‎    let gameActive = true;
-‎    let isMusicPlaying = false;
-‎
-‎    function loadBannerAd() {
-‎      (adsbygoogle = window.adsbygoogle || []).push({});
-‎    }
-‎
-‎    window.addEventListener('click', () => {
-‎      if (!isMusicPlaying) {
-‎        bgMusic.volume = 0.3;
-‎        bgMusic.play().then(() => {
-‎          isMusicPlaying = true;
-‎          musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
-‎        }).catch(error => {
-‎          console.log("Autoplay prevented:", error);
-‎        });
-‎      }
-‎      loadBannerAd();
-‎    }, { once: true });
-‎
-‎    function toggleMusic() {
-‎      if (isMusicPlaying) {
-‎        bgMusic.pause();
-‎        musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
-‎      } else {
-‎        bgMusic.play();
-‎        musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
-‎      }
-‎      isMusicPlaying = !isMusicPlaying;
-‎    }
-‎
-‎    function startGame(selectedMode) {
-‎      mode = selectedMode;
-‎      document.getElementById("modeSelect").style.display = "none";
-‎      gameBoard.style.display = "block";
-‎      drawBoard();
-‎     
-‎      if (!isMusicPlaying) {
-‎        bgMusic.volume = 0.3;
-‎        bgMusic.play().then(() => {
-‎          isMusicPlaying = true;
-‎          musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
-‎        }).catch(error => {
-‎          console.log("Autoplay prevented:", error);
-‎        });
-‎      }
-‎    }
-‎
-‎    function drawBoard() {
-‎      boardElement.innerHTML = "";
-‎      board.forEach((cell, index) => {
-‎        const cellDiv = document.createElement("div");
-‎        cellDiv.classList.add("cell");
-‎        if (cell === "X") cellDiv.classList.add("x");
-‎        if (cell === "O") cellDiv.classList.add("o");
-‎        if (cell !== "") cellDiv.classList.add("taken");
-‎        cellDiv.innerText = cell;
-‎        cellDiv.addEventListener("click", () => handleClick(index));
-‎        boardElement.appendChild(cellDiv);
-‎      });
-‎    }
-‎
-‎    function handleClick(index) {
-‎      if (!gameActive || board[index] !== "") return;
-‎
-‎      board[index] = currentPlayer;
-‎      drawBoard();
-‎
-‎      if (checkWinner(currentPlayer)) {
-‎        showPopup(`${currentPlayer} wins!`, "win-msg");
-‎        gameActive = false;
-‎        return;
-‎      }
-‎
-‎      if (!board.includes("")) {
-‎        showPopup("It's a draw!", "draw-msg");
-‎        gameActive = false;
-‎        return;
-‎      }
-‎
-‎      currentPlayer = currentPlayer === "X" ? "O" : "X";
-‎
-‎      if (mode === "1p" && currentPlayer === "O" && gameActive) {
-‎        setTimeout(aiMove, 500);
-‎      }
-‎    }
-‎
-‎    function aiMove() {
-‎      let emptyCells = board.map((val, i) => val === "" ? i : null).filter(i => i !== null);
-‎      if (emptyCells.length === 0) return;
-‎
-‎      let move = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-‎      board[move] = "O";
-‎      drawBoard();
-‎
-‎      if (checkWinner("O")) {
-‎        showPopup("O wins!", "win-msg");
-‎        gameActive = false;
-‎      } else if (!board.includes("")) {
-‎        showPopup("It's a draw!", "draw-msg");
-‎        gameActive = false;
-‎      } else {
-‎        currentPlayer = "X";
-‎      }
-‎    }
-‎
-‎    function checkWinner(player) {
-‎      const wins = [
-‎        [0,1,2], [3,4,5], [6,7,8],
-‎        [0,3,6], [1,4,7], [2,5,8],
-‎        [0,4,8], [2,4,6]
-‎      ];
-‎      return wins.some(combo => combo.every(i => board[i] === player));
-‎    }
-‎
-‎    function showPopup(message, className) {
-‎      popupMessage.className = className;
-‎      popupMessage.innerText = message;
-‎      popup.style.display = "flex";
-‎      setTimeout(loadBannerAd, 500);
-‎    }
-‎
-‎    function restartGame() {
-‎      board = ["", "", "", "", "", "", "", "", ""];
-‎      currentPlayer = "X";
-‎      gameActive = true;
-‎      popup.style.display = "none";
-‎      drawBoard();
-‎      setTimeout(loadBannerAd, 500);
-‎    }
-‎  </script>
-‎</body>
-‎</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tic Tac Toe - Color Edition</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      background: #f0f4f8;
+      padding-bottom: 60px; /* Add space for potential sticky ad */
+    }
+
+    h1 {
+      margin-top: 20px;
+      color: #1d4ed8;
+    }
+
+    #modeSelect, #gameBoard {
+      margin-top: 20px;
+    }
+
+    #modeSelect button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      background: #f97316;
+      color: white;
+      transition: background 0.3s;
+    }
+
+    #modeSelect button:hover {
+      background: #ea580c;
+    }
+
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 8px;
+      justify-content: center;
+      margin: 20px auto;
+      padding: 10px;
+      background: linear-gradient(45deg, #ff6b6b, #ffb3b3);
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .cell {
+      background: #fff;
+      border: 2px solid #ffadad;
+      font-size: 48px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      border-radius: 8px;
+      opacity: 0;
+      transform: scale(0.5);
+      animation: popIn 0.3s forwards;
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.5); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .cell:hover {
+      background: #ffb3b3;
+    }
+
+    .cell.taken {
+      cursor: not-allowed;
+    }
+
+    .cell.x {
+      color: #3b82f6;
+    }
+
+    .cell.o {
+      color: #ef4444;
+    }
+
+    #popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+    }
+
+    #popupContent {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    #popupContent h2 {
+      margin-bottom: 20px;
+    }
+
+    .win-msg {
+      color: #22c55e;
+    }
+
+    .draw-msg {
+      color: #f59e0b;
+    }
+
+    #popup button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #popup button:hover {
+      background: #4f46e5;
+    }
+
+    /* Ad Banner Styles */
+    #banner-ad-container {
+      margin: 20px auto;
+      text-align: center;
+      width: 100%;
+      max-width: 728px;
+      min-height: 90px;
+      overflow: hidden;
+    }
+    
+    .ad-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+    
+    @media (max-width: 768px) {
+      #banner-ad-container {
+        max-width: 320px;
+        min-height: 50px;
+      }
+    }
+
+    #musicControl {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      z-index: 100;
+    }
+
+    #musicControl i {
+      font-size: 24px;
+      color: #3b82f6;
+    }
+  </style>
+  <!-- Add Font Awesome for music icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- AdMob Script -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-9474678817392803" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <h1>Tic Tac Toe</h1>
+
+  <div id="modeSelect">
+    <button onclick="startGame('1p')">One Player</button>
+    <button onclick="startGame('2p')">Two Player</button>
+  </div>
+
+  <div id="gameBoard" style="display:none;">
+    <div id="board"></div>
+    <!-- Ad Banner Placement -->
+    <div id="banner-ad-container">
+      <div class="ad-label">Advertisement</div>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-app-pub-9474678817392803/9282107969"
+           data-ad-slot="3267246419"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+  </div>
+
+  <!-- Music control button -->
+  <div id="musicControl" onclick="toggleMusic()">
+    <i class="fas fa-music"></i>
+  </div>
+
+  <!-- Popup Modal -->
+  <div id="popup">
+    <div id="popupContent">
+      <h2 id="popupMessage"></h2>
+      <button onclick="restartGame()">Restart</button>
+    </div>
+  </div>
+
+  <!-- Audio element for background music -->
+  <audio id="bgMusic" loop>
+    <source src="https://freetouse.com/music/alegend/majestic" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    const boardElement = document.getElementById("board");
+    const popup = document.getElementById("popup");
+    const popupMessage = document.getElementById("popupMessage");
+    const gameBoard = document.getElementById("gameBoard");
+    const bgMusic = document.getElementById("bgMusic");
+    const musicControl = document.getElementById("musicControl");
+
+    let board = ["", "", "", "", "", "", "", "", ""];
+    let currentPlayer = "X";
+    let mode = "2p";
+    let gameActive = true;
+    let isMusicPlaying = false;
+
+    // Initialize AdMob banner
+    function loadBannerAd() {
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    }
+
+    // Start music automatically (but muted due to browser autoplay policies)
+    window.addEventListener('click', () => {
+      if (!isMusicPlaying) {
+        bgMusic.volume = 0.3;
+        bgMusic.play().then(() => {
+          isMusicPlaying = true;
+          musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+        }).catch(error => {
+          console.log("Autoplay prevented:", error);
+        });
+      }
+      // Load ad after first interaction
+      loadBannerAd();
+    }, { once: true });
+
+    function toggleMusic() {
+      if (isMusicPlaying) {
+        bgMusic.pause();
+        musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+      } else {
+        bgMusic.play();
+        musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+      }
+      isMusicPlaying = !isMusicPlaying;
+    }
+
+    function startGame(selectedMode) {
+      mode = selectedMode;
+      document.getElementById("modeSelect").style.display = "none";
+      gameBoard.style.display = "block";
+      drawBoard();
+      
+      // Try to start music when game starts if not already playing
+      if (!isMusicPlaying) {
+        bgMusic.volume = 0.3;
+        bgMusic.play().then(() => {
+          isMusicPlaying = true;
+          musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+        }).catch(error => {
+          console.log("Autoplay prevented:", error);
+        });
+      }
+    }
+
+    function drawBoard() {
+      boardElement.innerHTML = "";
+      board.forEach((cell, index) => {
+        const cellDiv = document.createElement("div");
+        cellDiv.classList.add("cell");
+        if (cell === "X") cellDiv.classList.add("x");
+        if (cell === "O") cellDiv.classList.add("o");
+        if (cell !== "") cellDiv.classList.add("taken");
+        cellDiv.innerText = cell;
+        cellDiv.addEventListener("click", () => handleClick(index));
+        boardElement.appendChild(cellDiv);
+      });
+    }
+
+    function handleClick(index) {
+      if (!gameActive || board[index] !== "") return;
+
+      board[index] = currentPlayer;
+      drawBoard();
+
+      if (checkWinner(currentPlayer)) {
+        showPopup(`${currentPlayer} wins!`, "win-msg");
+        gameActive = false;
+        return;
+      }
+
+      if (!board.includes("")) {
+        showPopup("It's a draw!", "draw-msg");
+        gameActive = false;
+        return;
+      }
+
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+
+      if (mode === "1p" && currentPlayer === "O" && gameActive) {
+        setTimeout(aiMove, 500);
+      }
+    }
+
+    function aiMove() {
+      let emptyCells = board.map((val, i) => val === "" ? i : null).filter(i => i !== null);
+      if (emptyCells.length === 0) return;
+
+      let move = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+      board[move] = "O";
+      drawBoard();
+
+      if (checkWinner("O")) {
+        showPopup("O wins!", "win-msg");
+        gameActive = false;
+      } else if (!board.includes("")) {
+        showPopup("It's a draw!", "draw-msg");
+        gameActive = false;
+      } else {
+        currentPlayer = "X";
+      }
+    }
+
+    function checkWinner(player) {
+      const wins = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
+      ];
+      return wins.some(combo => combo.every(i => board[i] === player));
+    }
+
+    function showPopup(message, className) {
+      popupMessage.className = className;
+      popupMessage.innerText = message;
+      popup.style.display = "flex";
+      // Refresh ad when game ends
+      setTimeout(loadBannerAd, 500);
+    }
+
+    function restartGame() {
+      board = ["", "", "", "", "", "", "", "", ""];
+      currentPlayer = "X";
+      gameActive = true;
+      popup.style.display = "none";
+      drawBoard();
+      // Refresh ad on game restart
+      setTimeout(loadBannerAd, 500);
+    }
+  </script>
+</body>
+</html>
